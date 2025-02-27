@@ -45,6 +45,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,28 +54,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.skymusicv01.FxManager
 import com.example.skymusicv01.R
 import com.example.skymusicv01.core.LongToTimeString
+import com.example.skymusicv01.viewmodel.MusicPlayViewModel
 
 @Composable
 fun MusicPlayFloating(
-    name:String,
-    author:String,
-    transcribedBy:String,
-    currentTime: Long =0L,
-    totalDuration: Long = 0L,
-    isPaused:Boolean = true,
-    speed:Float = 1.0f,
+    musicViewModel: MusicPlayViewModel,
     backClick:()->Unit={},
     closeClick:()->Unit={},
-    searchMusicClick:()->Unit={},
-    setKeyBoard:()->Unit={},
-    lastMusicClick:()->Unit={},
-    nextMusicClick:()->Unit={},
-    startMusicClick:()->Unit={},
-    decreasePlaySpeed:()->Unit = {},
-    increasePlaySpeed:()->Unit={}
+    searchMusicClick:()->Unit={}
 ){
+
+    val currentSong by musicViewModel.currentSong
+    val isPaused by musicViewModel.isPaused
+    val currentTime by musicViewModel.currentTime
+    val totalDuration by musicViewModel.totalDuration
+    val speed by musicViewModel.speed
+    val isSetKeyBoard by musicViewModel.isSetKeyBoard
+
+
+
     Column(
         modifier = Modifier
             .size(250.dp, 300.dp)
@@ -85,7 +86,11 @@ fun MusicPlayFloating(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            MusicInfo(name, author, transcribedBy)
+            MusicInfo(
+                name = currentSong?.name?:"Unknown Song",
+                author = currentSong?.author?:"Unknown Author",
+                transcribedBy = currentSong?.transcribedBy?:"Unknown TranscribedBy",
+            )
 
             Row(
                 modifier = Modifier.align(Alignment.TopEnd)
@@ -111,22 +116,35 @@ fun MusicPlayFloating(
             totalDuration = totalDuration
         )
         MusicPlayButtons(
-            lastMusicClick=lastMusicClick,
-            nextMusicClick=nextMusicClick,
-            startMusicClick=startMusicClick,
+            lastMusicClick= {  },
+            nextMusicClick={  },
+            startMusicClick = {
+                musicViewModel.togglePause()
+                if(!isSetKeyBoard){
+                    FxManager.showMessage("暂未设置键位，请先正确设置键位")
+                }
+            },
             isPaused=isPaused
         )
-        CheckBoxGroups(
+        ButtonGroups(
             searchMusicClick = searchMusicClick,
-            setKeyBoard=setKeyBoard
+            setKeyBoard = {
+                FxManager.showSetKeyBoard(musicViewModel)
+            }
         )
         MusicPlaySpeed(
             speed = speed,
-            decreasePlaySpeed=decreasePlaySpeed,
-            increasePlaySpeed=increasePlaySpeed
+            decreasePlaySpeed = {
+                musicViewModel.decreaseSpeed()
+            },
+            increasePlaySpeed = {
+                musicViewModel.increaseSpeed()
+            }
         )
     }
 }
+
+
 
 @Composable
 fun MusicInfo(
@@ -257,7 +275,7 @@ fun MusicPlayButtons(
 }
 
 @Composable
-fun CheckBoxGroups(
+fun ButtonGroups(
     searchMusicClick: () -> Unit ={},
     setKeyBoard:()->Unit={}
 ){
@@ -370,8 +388,3 @@ fun MusicPlaySpeed(
     }
 }
 
-@Preview
-@Composable
-fun tt(){
-    CheckBoxGroups()
-}

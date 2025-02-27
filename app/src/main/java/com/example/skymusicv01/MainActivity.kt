@@ -19,10 +19,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // 检查无障碍服务是否启用，如果未启用，跳转到设置
-        if (!isAccessibilityServiceEnabled()) {
-            promptUserToEnableAccessibilityService()
-        }
+//        // 检查无障碍服务是否启用，如果未启用，跳转到设置
+//        if (!isAccessibilityServiceEnabled()) {
+//            promptUserToEnableAccessibilityService()
+//        }
 
         setContent {
             SkyMusicV01Theme {
