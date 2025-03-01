@@ -8,31 +8,17 @@ import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-// 读取 assets/music 目录中的所有 .txt 文件，并解析为 List<Map<String, Any>> 类型
-fun readAllTxtFromAssets(context: Context): List<List<Map<String, Any>>> {
-    val songsList = mutableListOf<List<Map<String, Any>>>()
-
-    try {
-        // 获取 assets/music 目录中的所有文件
-        val files = context.assets.list("music")?.filter { it.endsWith(".txt") }
-
-        // 遍历所有的 .txt 文件
-        files?.forEach { file ->
-            try {
-                // 读取并解析每个文件
-                val songData = readTxtAndParseJsonFromAssets(context, "music/$file")
-                songsList.add(songData) // 只在解析成功时添加到列表
-            } catch (e: Exception) {
-                // 如果某个文件不能正确解析，打印错误并跳过
-                Log.e("TestJson", "Error parsing $file: ${e.message}")
-            }
-        }
+// 读取 assets/music 目录中的所有 .txt 文件，返回 List<String> 类型
+fun readAllTxtFromAssets(context: Context): List<String> {
+    return try {
+        // 获取 assets/music 目录中的所有 .txt 文件，并返回文件名列表
+        context.assets.list("music")?.filter { it.endsWith(".txt") } ?: emptyList()
     } catch (e: Exception) {
         e.printStackTrace()
+        emptyList()
     }
-
-    return songsList
 }
+
 
 // 读取 txt 文件并解析为 JSON
 fun readTxtAndParseJsonFromAssets(context: Context, fileName: String): List<Map<String, Any>> {
@@ -46,7 +32,7 @@ fun readTxtAndParseJsonFromAssets(context: Context, fileName: String): List<Map<
 
     // 将读取到的字符串解析为 JSON
     val json = stringBuilder.toString()
-    Log.d("TestJson", json)  // 打印日志查看解析的 JSON 数据
+    //Log.d("TestJson", json)  // 打印日志查看解析的 JSON 数据
 
     val gson = Gson()
 

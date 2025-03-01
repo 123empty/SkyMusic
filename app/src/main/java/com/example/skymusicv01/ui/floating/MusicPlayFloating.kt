@@ -296,8 +296,9 @@ fun ButtonGroups(
                         .weight(1f),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("轨迹圆球", style = MaterialTheme.typography.titleMedium)
-                    Checkbox(checked = false, onCheckedChange = {})
+                    Text("测试按钮", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Icon(Icons.Rounded.Build, contentDescription = null)
                 }
                 Row(
                     modifier = Modifier
@@ -305,8 +306,9 @@ fun ButtonGroups(
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    Text("轨迹圆球", style = MaterialTheme.typography.titleMedium)
-                    Checkbox(checked = false, onCheckedChange = {})
+                    Text("测试按钮", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Icon(Icons.Rounded.Build, contentDescription = null)
                 }
                 Row(
                     modifier = Modifier
@@ -331,16 +333,18 @@ fun ButtonGroups(
                         .weight(1f),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("轨迹圆球", style = MaterialTheme.typography.titleMedium)
-                    Checkbox(false, {})
+                    Text("测试按钮", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Icon(Icons.Rounded.Build, contentDescription = null)
                 }
                 Row(
                     modifier = Modifier
                         .weight(1f),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("轨迹圆球", style = MaterialTheme.typography.titleMedium)
-                    Checkbox(false, {})
+                    Text("测试按钮", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Icon(Icons.Rounded.Build, contentDescription = null)
                 }
                 Row(
                     modifier = Modifier

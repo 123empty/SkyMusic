@@ -27,21 +27,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             SkyMusicV01Theme {
                 FxManager.context = applicationContext as Application
-                val navController = rememberNavController()
-                NavGraph(navController = navController, startDestination = Routes.Music.routes)
+//                val navController = rememberNavController()
+//                NavGraph(navController = navController, startDestination = Routes.Music.routes)
+
+                FxManager.install()
+                FxManager.show()
             }
         }
     }
     // 检查无障碍服务是否启用
-    private fun isAccessibilityServiceEnabled(): Boolean {
-        val am = getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
-        val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
-        return enabledServices.contains(AutoAccessibilityService::class.java.name)
-    }
-
-    // 提示用户启用无障碍服务
-    private fun promptUserToEnableAccessibilityService() {
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-        startActivity(intent)
-    }
+//    private fun isAccessibilityServiceEnabled(): Boolean {
+//        val am = getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
+//        val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
+//        return enabledServices.contains(AutoAccessibilityService::class.java.name)
+//    }
+//
+//    // 提示用户启用无障碍服务
+//    private fun promptUserToEnableAccessibilityService() {
+//        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+//        startActivity(intent)
+//    }
 }

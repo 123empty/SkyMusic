@@ -82,7 +82,7 @@ fun KeyBoardFloating(
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
-                            // Convert dragAmount from pixels to dp
+                            // 转为dp
                             musicPlayViewModel.updateKeyBoardSize(
                                 width + (dragAmount.x / density).dp,
                                 height + (dragAmount.y / density).dp

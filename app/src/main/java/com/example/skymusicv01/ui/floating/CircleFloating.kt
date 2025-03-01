@@ -35,10 +35,3 @@ fun CircleFloating(onClick:()->Unit){
             )
     )
 }
-
-@Preview
-@Composable
-fun CircleFloatingPreview(){
-    CircleFloating(){
-    }
-}

@@ -30,34 +30,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.skymusicv01.FxManager.context
 import com.example.skymusicv01.data.readAllTxtFromAssets
+import com.example.skymusicv01.data.readTxtAndParseJsonFromAssets
 import com.example.skymusicv01.data.stringToSongNoteList
 import com.example.skymusicv01.model.Song
 import com.example.skymusicv01.model.SongNote
 
 @Composable
 fun SearchMusicFloating(
-    backClick:()->Unit={},
-    itemClick:(Song)->Unit={}
+    backClick: () -> Unit = {},
+    itemClick: (Song) -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val allSongsFilesName = remember { mutableStateOf<List<String>>(emptyList()) }
 
-    // 使用 remember 缓存读取的歌曲数据，避免每次重组时重新加载
-    val allSongs = remember { mutableStateOf<List<List<Map<String, Any>>>>(emptyList()) }
-
-    // 只在首次组合时读取数据
+    // 读取数据
     LaunchedEffect(Unit) {
-        // 读取并解析所有txt文件
-        val songs = readAllTxtFromAssets(context)
-        allSongs.value = songs // 设置状态
+        val songsFilesName = readAllTxtFromAssets(context) // 读取所有 txt 文件名
+        allSongsFilesName.value = songsFilesName
     }
 
-    val filteredList = allSongs.value.flatten().filter { song ->
-        val name = song["name"] as? String
-        name?.contains(searchText, ignoreCase = true) == true
+    val filteredList = allSongsFilesName.value.filter { songFileName ->
+        songFileName.contains(searchText, ignoreCase = true)
     }
 
     Scaffold(
@@ -81,19 +79,20 @@ fun SearchMusicFloating(
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
-            items(filteredList) { song ->
-                val name = song["name"] as? String ?: "Unknown Song"
-                val author = (song["author"] as? String).takeIf { it?.isNotEmpty() == true } ?: "Unknown Author"
+            items(filteredList) { songFileName ->
                 Row(
                     modifier = Modifier.clickable {
-                        val songNotes:List<SongNote> = stringToSongNoteList(song["songNotes"].toString())
-                        val transcribedBy = (song["transcribedBy"] as? String).takeIf { it?.isNotEmpty() == true } ?: "Unknown TranscribedBy"
+                        val song = readTxtAndParseJsonFromAssets(context,"music/$songFileName")
+                        val name = song[0]["name"] as? String ?: "Unknown Song"
+                        val author = (song[0]["author"] as? String).takeIf { it?.isNotEmpty() == true } ?: "Unknown Author"
+                        val songNotes:List<SongNote> = stringToSongNoteList(song[0]["songNotes"].toString())
+                        val transcribedBy = (song[0]["transcribedBy"] as? String).takeIf { it?.isNotEmpty() == true } ?: "Unknown TranscribedBy"
                         //Log.d("TestFloating","${Song(name,author,transcribedBy,songNotes)}")
                         itemClick(Song(name,author,transcribedBy,songNotes))
                     }
                 ){
                     Text(
-                        text = "$name-$author",
+                        text = songFileName.removeSuffix(".txt"),
                         maxLines = 1,
                         style = MaterialTheme.typography.labelSmall
                     )

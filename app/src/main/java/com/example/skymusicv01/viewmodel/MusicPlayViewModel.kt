@@ -97,20 +97,32 @@ class MusicPlayViewModel : ViewModel() {
             if (_isPaused.value) {
                 pause()
             } else {
-                start()
+                if(_currentTime.value>=_totalDuration.value){
+                    restartSong()
+                }else{
+                    start()
+                }
             }
         }
     }
 
+    //开始播放
     private fun start() {
-        startCheckInterval() // 启动 1 毫秒检查任务
+        startCheckInterval()
+    }
+
+    // 重新播放
+    private fun restartSong() {
+        _currentTime.value = 0L
+        currentIndex = 0
+        startCheckInterval()
     }
 
     private fun pause() {
         job?.cancel() // 取消协程
     }
 
-    // 启动检查任务（使用协程）
+    // 启动检查任务
     private fun startCheckInterval() {
         job = CoroutineScope(Dispatchers.Main).launch {
             while (_currentTime.value<_totalDuration.value) {
@@ -119,6 +131,9 @@ class MusicPlayViewModel : ViewModel() {
                 _currentTime.value+=delayTime
                 checkAndOutputKey(_currentTime.value)
                 currentIndex++
+            }
+            if(_currentTime.value>=_totalDuration.value){
+                _isPaused.value = true
             }
         }
     }
@@ -135,6 +150,7 @@ class MusicPlayViewModel : ViewModel() {
             sendPointsToAccessibilityService(points)
         }
     }
+
 
     //发送坐标给无障碍
     private fun sendPointsToAccessibilityService(points: List<PointF>) {
