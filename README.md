@@ -12,3 +12,7 @@
 - 🎛 **自定义键位**：可调整琴键大小和键位映射。
 
 ---
+
+## 📥 下载与安装
+点击下方链接下载最新版本的 APK：
+[📥 下载 app-release.apk](https://github.com/123empty/SkyMusicV0.1/raw/master/app/release/app-release.apk)
